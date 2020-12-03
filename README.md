@@ -26,7 +26,9 @@ exclude MANIFEST.in
 
 #### Examples
 ```bash
-setup-prod > setup.py
+name=$(IFS=.;set ${PWD##*/};echo $1)
+version="..."
+setup-prod "$name" "$version" > setup.py
 ```
 
 ```python
@@ -34,6 +36,7 @@ import setuptools
 
 setuptools.setup(
     name='NAME',
+    version='VERSION',
     install_requires=open('requirements.txt').read().splitlines(),
     packages=setuptools.find_packages()
 )
@@ -41,17 +44,19 @@ setuptools.setup(
 
 environment variables
 ```bash
+name=$(IFS=.;set ${PWD##*/};echo $1)
+version="..."
 scripts="$(find scripts -type f)"
-export SETUP_NAME="custom-name"
 export SETUP_SCRIPTS="$scripts"
-setup-prod > setup.py
+setup-prod "$name" "$version" > setup.py
 ```
 
 ```python
 import setuptools
 
 setuptools.setup(
-    name='custom-name',
+    name='NAME',
+    version='VERSION',
     install_requires=open('requirements.txt').read().splitlines(),
     packages=setuptools.find_packages(),
     scripts=['scripts/file1','scripts/file2']

@@ -2,18 +2,16 @@
 { set +x; } 2>/dev/null
 
 usage() {
-    echo "usage: $(basename $0)"
+    echo "usage: $(basename $0) name version"
     [[ $1 == "-h" ]] || [[ $1 == "--help" ]]; exit
 }
 
 [[ $1 == "-h" ]] || [[ $1 == "--help" ]] && usage "$@"
 
-[[ $# != 0 ]] && usage
+[[ $# != 2 ]] && usage
 
-name="$SETUP_NAME"
-[[ -z "$name" ]] && {
-   name="$(IFS=.;set ${PWD##*/};echo $1)"
-}
+name="$1"
+version="$2"
 [[ -n "$SETUP_SCRIPTS" ]] && {
     scripts="$(echo "$SETUP_SCRIPTS" | sed "s/;/';'/g;s/^/'/;s/$/'/" | sed 'H;1h;$!d;x;y/\n/,/')"
     cat <<EOF
@@ -21,6 +19,7 @@ import setuptools
 
 setuptools.setup(
     name='$name',
+    version='$version',
     install_requires=open('requirements.txt').read().splitlines(),
     packages=setuptools.find_packages(),
     scripts=[$scripts]
@@ -32,6 +31,7 @@ import setuptools
 
 setuptools.setup(
     name='$name',
+    version='$version',
     install_requires=open('requirements.txt').read().splitlines(),
     packages=setuptools.find_packages()
 )
